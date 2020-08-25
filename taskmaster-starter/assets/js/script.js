@@ -19,23 +19,24 @@ var createTask = function (taskText, taskDate, taskList) {
 };
 
 var loadTasks = function () {
-  tasks = JSON.parse(localStorage.getItem("tasks"));
+  tasks = JSON.parse(localStorage.getItem("tasks")); // get the tasks from 
 
   // if nothing in localStorage, create a new object to track all task status arrays
-  if (!tasks) {
-    tasks = {
-      toDo: [],
-      inProgress: [],
+  // if tasks IS equal to NULL/undefined 
+  if (!tasks) {  // curly brace = object
+    tasks = {  // make tasks value 0 instead of null (empty arrays instead of null)
+      toDo: [],  // brackets = array
+      inProgress: [], // creates arrays in all these categories
       inReview: [],
       done: []
     };
   }
 
   // loop over object properties
-  $.each(tasks, function (list, arr) {
+  $.each(tasks, function (list, arr) { // list = a key, arr is empty
     // then loop over sub-array
-    arr.forEach(function (task) {
-      createTask(task.text, task.date, list);
+    arr.forEach(function (task) {  // for each array in the values of my object execute
+      createTask(task.text, task.date, list); // uses list name to put it in the right column /what you type in
     });
   });
 };
