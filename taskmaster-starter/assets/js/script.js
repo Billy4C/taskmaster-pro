@@ -114,7 +114,7 @@ $(".list-group").on("click", "span", function () {
 });
 
 // value of due date was changed
-$(".list-group").on("blur", "input[type='text']", function() {
+$(".list-group").on("blur", "input[type='text']", function () {
   // get current text
   var date = $(this)
     .val()
@@ -189,7 +189,71 @@ $("#remove-tasks").on("click", function () {
   saveTasks();
 });
 
-// load tasks for the first time
-loadTasks();
+$(".card .list-group").sortable({ //sortable turns every element in the list group into a sortable list
+  connectWith: $(".card .list-group"), // connectWith links these sortable lists with any other list with the same class
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone",
+  activate: function (event) {
+    console.log("activate", this);
+  },
+  deactivate: function (event) {
+    console.log("deactivate", this);
+  },
+  over: function (event) { // item enters the list
+    console.log("over", event.target);
+  },
+  out: function (event) { // item leaves the list
+    console.log("out", event.target);
+  },
+  update: function (event) { // when contents of a list have changed
+    var tempArr = [];
+
+    // loop over current se of children in sortable list
+    $(this).children().each(function () {
+      var text = $(this)
+      .find("p")
+      .text()
+      .trim();
+
+      var date = $(this)
+      .find("span")
+      .text()
+      .trim();
+
+      // add task data to the temp array as an object
+      tempArr.push({
+        text:text,
+        date:date
+      });
+    });
+    console.log(tempArr);
+
+    var arrName = $(this)
+    .attr("id")
+    .replace("list-", "")
+
+    // update array on tasks object and save
+    tasks[arrName] = tempArr;
+    saveTasks();
+  }
+});
+
+$("#trash").droppable({
+  accept: ".card .list-group-item",
+  tolerance: "touch",
+  drop: function(event, ui) {
+    ui.draggable.remove();
+    console.log("drop")
+  },
+  over: function(event, ui) {
+    console.log("over");
+  },
+  out: function(event, ui) {
+    console.log("out");
+  }
+})
+  // load tasks for the first time
+  loadTasks();
 
 
